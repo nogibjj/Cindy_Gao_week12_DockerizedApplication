@@ -6,9 +6,9 @@ This project is a simple Flask-based web application designed to send health rem
 ## Project Overview:
 The **Health Reminder App** is a simple web app that helps users maintain healthy habits. It sends reminders for:
 
-**Drinking water** – reminds users to drink water regularly.
-**Standing up** – encourages users to take breaks and stretch.
-**Daily exercise** – motivates users to do some physical activity.
+**Drinking water** – reminds users to drink water regularly.<br>
+**Standing up** – encourages users to take breaks and stretch.<br>
+**Daily exercise** – motivates users to do some physical activity.<br>
 The app is built with Flask and Docker, making it easy to deploy and run on any system. It’s designed to help people stay on track with basic health goals in a simple and convenient way.<br><br>
 
 ## Project Structure:
