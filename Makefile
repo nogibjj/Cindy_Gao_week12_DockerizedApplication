@@ -1,13 +1,77 @@
+# Variables
+IMAGE_NAME = health-reminder-app
+DOCKER_ID_USER = jiaxingao1997
+PORT = 5000
+
+# Show Docker information
+image_show:
+	docker images
+
+container_show:
+	docker ps
+
+# Install dependencies locally
 install:
-	pip install --upgrade pip && pip install -r requirements.txt
+	@echo "Installing Python dependencies..."
+	python -m pip install --upgrade pip
+	python -m pip install -r requirements.txt
 
-format:
-	black *.py
+# Run the Flask app locally
+run:
+	@echo "Running the Flask app locally..."
+	python app.py
 
-lint:
-	pylint --disable=R,C --ignore-patterns=test_.*?py *.py
+# Docker Hub authentication
+login:
+	@echo "Logging in to Docker Hub..."
+	@if [ -f .env ]; then \
+		. .env && echo "$$DOCKER_TOKEN" | docker login -u $(DOCKER_ID_USER) --password-stdin; \
+	else \
+		echo "Error: .env file not found or DOCKER_TOKEN not set. Please configure it."; \
+		exit 1; \
+	fi
 
-test:
-	python -m pytest -cov=main test_main.py
+# Build and push the Docker image
+build: login
+	@echo "Building Docker image..."
+	docker build -t $(IMAGE_NAME) .
+	docker tag $(IMAGE_NAME) $(DOCKER_ID_USER)/$(IMAGE_NAME):latest
+	docker push $(DOCKER_ID_USER)/$(IMAGE_NAME):latest
 
-all: install format lint test
+# Run the Docker container
+docker-run:
+	@echo "Stopping any containers using port $(PORT)..."
+	-docker stop $$(docker ps -q --filter "publish=$(PORT)")
+	@echo "Removing any stopped containers..."
+	-docker rm $$(docker ps -q --filter "publish=$(PORT)")
+	@echo "Starting a new Docker container..."
+	docker run -d -p $(PORT):5000 $(IMAGE_NAME)
+
+# Stop all running containers
+stop:
+	@echo "Stopping all running containers..."
+	-docker stop $$(docker ps -q)
+
+# Clean up containers and images
+clean:
+	@echo "Stopping containers..."
+	-docker stop $$(docker ps -a -q --filter ancestor=$(IMAGE_NAME))
+	@echo "Removing containers..."
+	-docker rm -f $$(docker ps -a -q --filter ancestor=$(IMAGE_NAME))
+	@echo "Removing image..."
+	-docker rmi -f $(IMAGE_NAME)
+	@echo "Clean complete."
+
+# Check if the app's port is in use
+check-port:
+	@echo "Checking if port $(PORT) is in use..."
+	-docker ps --filter "publish=$(PORT)"
+
+# Show logs for the container
+logs:
+	docker logs $$(docker ps -q --filter ancestor=$(IMAGE_NAME))
+
+# Combined development workflow
+dev: build docker-run
+
+.PHONY: image_show container_show install run login build docker-run stop clean check-port logs dev
