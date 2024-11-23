@@ -1,5 +1,3 @@
-// devcontainer is not with local, it is with codespace
-
 {
 	"name": "GitHub Codespaces (Default)",
 
@@ -9,15 +7,12 @@
 	},
 	"features": {
 		"ghcr.io/devcontainers/features/nvidia-cuda:1": { 
-		  "installCudnn": true
+			"installCudnn": true
 		}
-	  },
+	},
 
-	// Configure tool-specific properties.
 	"customizations": {
-		// Configure properties specific to VS Code.
 		"vscode": {
-			// Set *default* container specific settings.json values on container create.
 			"settings": { 
 				"go.toolsManagement.checkForUpdates": "local",
 				"go.useLanguageServer": true,
@@ -39,8 +34,6 @@
 					"**/target/**": true
 				}
 			},
-			
-			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
 				"GitHub.vscode-pull-request-github",
 				"GitHub.copilot-nightly",
@@ -69,11 +62,9 @@
 		"--privileged",
 		"--init"
 	],
-	
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [],
 
-	// "oryx build" will automatically install your dependencies and attempt to build your project
-	//"postCreateCommand": "oryx build -p virtualenv_name=.venv --log-file /tmp/oryx-build.log --manifest-dir /tmp || echo 'Could not auto-build. Skipping.'"
-	 "postCreateCommand": "bash setup.sh"
+	// Forward your required ports here (for example, port 8080)
+	"forwardPorts": [8080],  // Forward port 8080 from your container to your local machine
+
+	"postCreateCommand": "bash setup.sh"
 }
