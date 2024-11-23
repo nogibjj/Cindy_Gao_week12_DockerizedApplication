@@ -58,6 +58,8 @@ cd health-reminder-app
 docker build -t health-reminder-app .
 docker run -d -p 8080:5000 health-reminder-app
 ```
+![docker_push](https://github.com/user-attachments/assets/ef104456-5c39-404f-a30e-c485eba0f2f2)
+
 
 3. Open the app in your browser by visiting `http://localhost:8080`.
 ![image](https://github.com/user-attachments/assets/c010c032-5914-4a80-bca3-6b670b5111af)
